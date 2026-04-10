@@ -1,0 +1,66 @@
+<% layout("/layouts/boilerplate")%>
+<style>
+    .error-page {
+        min-height: calc(100vh - 56px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+
+    .error-inner {
+        max-width: 440px;
+    }
+
+    .error-code {
+        font-size: 5rem;
+        font-weight: 800;
+        color: var(--border-hover);
+        letter-spacing: -3px;
+        line-height: 1;
+        margin-bottom: 1rem;
+    }
+
+    .error-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+    }
+
+    .error-msg {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.65;
+        background: var(--red-bg);
+        border: 1px solid var(--red-border);
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+
+    .error-actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+</style>
+
+<div class="error-page">
+<div class="error-inner">
+    <div class="error-code">Oops</div>
+    <h1 class="error-title">Something went wrong</h1>
+    <div class="error-msg"><%= err.message %></div>
+    <div class="error-actions">
+        <a href="/problems" class="btn btn-primary">
+            <i class="fas fa-home"></i> Back to Problems
+        </a>
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Go back
+        </a>
+    </div>
+</div>
+</div>

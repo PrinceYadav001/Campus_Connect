@@ -1,0 +1,1122 @@
+<% layout('/layouts/boilerplate') %>
+<style>
+    /* ── Problem page ── */
+    .problem-page {
+        padding: 2rem 0 4rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+        color: var(--text-dim);
+        margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb a {
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: color 0.15s;
+    }
+
+    .breadcrumb a:hover { color: var(--text); }
+    .breadcrumb i { font-size: 0.65rem; }
+
+    /* Header */
+    .problem-head {
+        margin-bottom: 1.5rem;
+    }
+
+    .problem-meta-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+    }
+
+    .problem-title {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        color: var(--text);
+        margin-bottom: 1rem;
+    }
+
+    .problem-author-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .author-ava {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #7c3aed, #06b6d4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    /* Divider */
+    .page-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 1.5rem 0;
+    }
+
+    /* Two-col layout */
+    .problem-layout {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    /* Main column */
+    .problem-main > * + * {
+        margin-top: 1.5rem;
+    }
+
+    .problem-img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        display: block;
+    }
+
+    .content-block {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+    }
+
+    .content-block-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-dim);
+        margin-bottom: 0.75rem;
+    }
+
+    .content-block p {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        line-height: 1.75;
+    }
+
+    .tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.75rem;
+    }
+
+    .tag-item {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        border-radius: var(--radius-sm);
+        padding: 3px 9px;
+        font-size: 0.78rem;
+        font-family: var(--font-mono);
+    }
+
+    /* Actions */
+    .problem-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* ── Image Lightbox ── */
+    .problem-img-wrap {
+        position: relative;
+        cursor: zoom-in;
+        display: block;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .problem-img-wrap::after {
+        content: '\f00e';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        bottom: 10px;
+        right: 12px;
+        color: rgba(255,255,255,0.85);
+        background: rgba(0,0,0,0.55);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .problem-img-wrap:hover::after { opacity: 1; }
+
+    .lightbox-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.92);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        cursor: zoom-out;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+    }
+
+    .lightbox-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .lightbox-img {
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        transform: scale(0.95);
+        transition: transform 0.2s;
+    }
+
+    .lightbox-overlay.open .lightbox-img { transform: scale(1); }
+
+    .lightbox-close {
+        position: fixed;
+        top: 16px;
+        right: 18px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #fff;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.15s;
+        z-index: 10000;
+    }
+
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+
+    /* ───────────────────────────────────────────
+       SOLUTION FORM — rich redesign
+    ─────────────────────────────────────────── */
+    .solution-form-block {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-top: 3px solid var(--primary);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .sol-form-head {
+        padding: 1.25rem 1.5rem 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .sol-form-head-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .sol-form-head-title i { color: var(--primary-light); }
+
+    .sol-form-head-sub {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+    }
+
+    .sol-form-body { padding: 1.25rem 1.5rem; }
+
+    /* Approach chips */
+    .approach-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        color: var(--text-dim);
+        margin-bottom: 0.6rem;
+    }
+
+    .approach-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .approach-chip {
+        display: none;
+    }
+
+    .approach-chip + label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: var(--radius-sm);
+        border: 1.5px solid var(--border);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.18s;
+        user-select: none;
+    }
+
+    .approach-chip + label:hover {
+        border-color: var(--amber);
+        color: var(--amber);
+    }
+
+    .approach-chip:checked + label {
+        background: rgba(245,158,11,0.15);
+        border-color: var(--amber);
+        color: var(--amber);
+    }
+
+    /* Star rating */
+    .rating-section {
+        margin-bottom: 1.2rem;
+    }
+
+    .star-label-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .rating-hint {
+        font-size: 0.78rem;
+        color: var(--amber);
+        font-weight: 600;
+        min-width: 120px;
+        transition: all 0.18s;
+    }
+
+    .star-row {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 0.25rem;
+        width: fit-content;
+    }
+
+    .star-row input { display: none; }
+
+    .star-row label {
+        font-size: 1.6rem;
+        color: var(--border-strong, #484f58);
+        cursor: pointer;
+        transition: color 0.1s, transform 0.1s;
+        line-height: 1;
+    }
+
+    .star-row label:hover,
+    .star-row label:hover ~ label,
+    .star-row input:checked ~ label {
+        color: var(--amber);
+    }
+
+    .star-row label:hover { transform: scale(1.15); }
+
+    /* Textarea with toolbar */
+    .sol-textarea-wrap {
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: border-color 0.2s;
+        margin-bottom: 0.6rem;
+    }
+
+    .sol-textarea-wrap:focus-within {
+        border-color: var(--amber);
+        box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+    }
+
+    .sol-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.4rem 0.6rem;
+        background: var(--bg-input);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .sol-tool-btn {
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        font-size: 0.78rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .sol-tool-btn:hover {
+        background: rgba(255,255,255,0.07);
+        color: var(--text);
+    }
+
+    .sol-tool-btn.active {
+        background: rgba(245,158,11,0.15);
+        color: var(--amber);
+    }
+
+    .sol-tool-sep {
+        width: 1px;
+        height: 16px;
+        background: var(--border);
+        margin: 0 0.15rem;
+    }
+
+    .sol-textarea {
+        width: 100%;
+        min-height: 120px;
+        background: var(--bg-input);
+        border: none;
+        padding: 0.8rem;
+        color: var(--text);
+        font-size: 0.9rem;
+        font-family: var(--font);
+        line-height: 1.6;
+        resize: vertical;
+        outline: none;
+        display: block;
+    }
+
+    .sol-textarea.code-mode {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.85rem;
+        tab-size: 2;
+    }
+
+    .sol-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .char-count {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+    }
+
+    .char-count.warn { color: var(--amber); }
+    .char-count.error { color: var(--red); }
+
+    .sol-tips {
+        background: rgba(245,158,11,0.06);
+        border: 1px solid rgba(245,158,11,0.2);
+        border-radius: var(--radius);
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .sol-tips-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--amber);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .sol-tips ul {
+        margin: 0;
+        padding-left: 1.2rem;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+    }
+
+    .sol-submit-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .sol-submit-note {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+    }
+
+    /* Login prompt */
+    .sol-login-prompt {
+        background: var(--bg-card);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .sol-login-prompt i {
+        font-size: 1.8rem;
+        color: var(--text-dim);
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .sol-login-prompt h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+    }
+
+    .sol-login-prompt p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    /* Sidebar solutions */
+    .sidebar {
+        position: sticky;
+        top: 72px;
+    }
+
+    .sidebar-block {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .sidebar-block-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1.1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-block-title {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .sidebar-block-count {
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 1px 7px;
+        border-radius: 50px;
+        min-width: 22px;
+        text-align: center;
+    }
+
+    /* Individual solution card */
+    .sol-card {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+    }
+
+    .sol-card:last-child { border-bottom: none; }
+    .sol-card:hover { background: rgba(255,255,255,0.02); }
+
+    .sol-card-accepted {
+        border-left: 3px solid var(--green);
+    }
+
+    .sol-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .sol-author-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sol-card-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #7c3aed, #06b6d4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .sol-card-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .sol-accepted-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--green);
+        background: rgba(16,185,129,0.1);
+        border: 1px solid rgba(16,185,129,0.25);
+        border-radius: 50px;
+        padding: 1px 7px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .sol-card-stars {
+        display: flex;
+        gap: 1px;
+        margin-bottom: 0.5rem;
+    }
+
+    .sol-star-full  { color: var(--amber); font-size: 0.8rem; }
+    .sol-star-empty { color: var(--border-strong, #484f58); font-size: 0.8rem; }
+
+    .sol-card-approach {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--blue, #3b82f6);
+        background: rgba(59,130,246,0.1);
+        border: 1px solid rgba(59,130,246,0.2);
+        border-radius: 4px;
+        padding: 1px 7px;
+        margin-bottom: 0.5rem;
+    }
+
+    .sol-card-body {
+        font-size: 0.83rem;
+        color: var(--text-muted);
+        line-height: 1.65;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        -webkit-box-orient: vertical;
+    }
+
+    .sol-card-body.expanded {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        display: block;
+    }
+
+    .sol-card-body.code-body {
+        font-family: 'Courier New', monospace;
+        font-size: 0.78rem;
+        background: var(--bg);
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        white-space: pre-wrap;
+    }
+
+    .sol-card-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.6rem;
+    }
+
+    .sol-card-date {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+    }
+
+    .sol-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .sol-expand-btn {
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        font-size: 0.72rem;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: all 0.15s;
+    }
+
+    .sol-expand-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    /* Solution empty state */
+    .no-solutions {
+        padding: 2.5rem 1.2rem;
+        text-align: center;
+        color: var(--text-dim);
+        font-size: 0.85rem;
+    }
+
+    .no-solutions i { display: block; font-size: 1.5rem; margin-bottom: 0.5rem; opacity: 0.4; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .problem-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar { order: -1; position: static; }
+</style>
+
+
+<div class="problem-page">
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/problems">Problems</a>
+        <i class="fas fa-chevron-right"></i>
+        <span><%= problem.title.length > 40 ? problem.title.substring(0, 40) + '…' : problem.title %></span>
+    </nav>
+
+    <!-- Header -->
+    <header class="problem-head">
+        <div class="problem-meta-row">
+            <span class="badge badge-muted"><%= problem.category %></span>
+            <span class="badge badge-muted"><%= problem.type %></span>
+            <span class="badge diff-<%= problem.difficulty %>"><%= problem.difficulty %></span>
+            <% if (problem.status === 'solved') { %>
+                <span class="badge badge-green"><i class="fas fa-check"></i> Solved</span>
+            <% } else { %>
+                <span class="badge badge-muted">Open</span>
+            <% } %>
+        </div>
+
+        <h1 class="problem-title"><%= problem.title %></h1>
+
+        <div class="problem-author-row">
+            <div class="author-ava"><%= problem.author.username.charAt(0).toUpperCase() %></div>
+            <span>Posted by <strong><%= problem.author.username %></strong></span>
+        </div>
+    </header>
+
+    <div class="page-divider"></div>
+
+    <!-- Two-col layout -->
+    <div class="problem-layout">
+
+        <!-- Main column -->
+        <div class="problem-main">
+
+            <% if (problem.image && problem.image.url) { %>
+                <div class="problem-img-wrap" id="img-zoom-trigger" title="Click to zoom">
+                    <img src="<%= problem.image.url %>" alt="<%= problem.title %>" class="problem-img" style="border:none;border-radius:0;">
+                </div>
+            <% } %>
+
+            <div class="content-block">
+                <div class="content-block-label">Description</div>
+                <p><%= problem.description %></p>
+
+                <% if (problem.tags && problem.tags.length > 0) { %>
+                    <div class="tags-wrap">
+                        <% problem.tags.forEach(tag => { %>
+                            <span class="tag-item"><%= tag %></span>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Owner actions -->
+            <% if (currUser && currUser._id.equals(problem.author._id)) { %>
+                <div class="problem-actions">
+                    <a href="/problems/<%= problem._id %>/edit" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <!-- Toggle open/solved -->
+                    <form method="POST" action="/problems/<%= problem._id %>/toggle-status" style="display:inline;">
+                        <% if (problem.status === 'open') { %>
+                            <button type="submit" class="btn btn-secondary" style="color:var(--green);border-color:rgba(16,185,129,0.3);">
+                                <i class="fas fa-check-circle"></i> Mark as Solved
+                            </button>
+                        <% } else { %>
+                            <button type="submit" class="btn btn-secondary" style="color:#3b82f6;border-color:rgba(59,130,246,0.3);">
+                                <i class="fas fa-lock-open"></i> Reopen Problem
+                            </button>
+                        <% } %>
+                    </form>
+                    <form method="POST" action="/problems/<%= problem._id %>?_method=DELETE" style="display:inline;"
+                          onsubmit="return confirm('Delete this problem permanently?');">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            <% } %>
+
+            <!-- Submit solution -->
+            <% if (currUser) { %>
+                <div class="solution-form-block">
+                    <!-- Header -->
+                    <div class="sol-form-head">
+                        <div class="sol-form-head-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Share Your Solution
+                        </div>
+                        <div class="sol-form-head-sub">
+                            Your insight could unblock a fellow student. Be clear, be kind, be helpful.
+                        </div>
+                    </div>
+
+                    <div class="sol-form-body">
+                        <form action="/problems/<%= problem._id %>/solutions" method="POST" novalidate id="sol-form">
+
+                            <!-- Approach tags -->
+                            <div class="approach-label">Your approach</div>
+                            <div class="approach-chips">
+                                <input class="approach-chip" type="radio" name="approach" id="ap-explain" value="Explanation">
+                                <label for="ap-explain">📖 Explanation</label>
+
+                                <input class="approach-chip" type="radio" name="approach" id="ap-code" value="Code">
+                                <label for="ap-code">💻 Code</label>
+
+                                <input class="approach-chip" type="radio" name="approach" id="ap-step" value="Step-by-step">
+                                <label for="ap-step">📋 Step-by-step</label>
+
+                                <input class="approach-chip" type="radio" name="approach" id="ap-resource" value="Resource">
+                                <label for="ap-resource">🔗 Resource / Link</label>
+
+                                <input class="approach-chip" type="radio" name="approach" id="ap-other" value="Other">
+                                <label for="ap-other">💡 Other</label>
+                            </div>
+
+                            <!-- Confidence rating -->
+                            <div class="rating-section">
+                                <div class="approach-label">Confidence level</div>
+                                <div class="star-label-row">
+                                    <div class="star-row" id="star-row">
+                                        <input type="radio" id="r5" name="solution[rating]" value="5">
+                                        <label for="r5" title="Very confident">★</label>
+                                        <input type="radio" id="r4" name="solution[rating]" value="4">
+                                        <label for="r4" title="Fairly confident">★</label>
+                                        <input type="radio" id="r3" name="solution[rating]" value="3" checked>
+                                        <label for="r3" title="Somewhat confident">★</label>
+                                        <input type="radio" id="r2" name="solution[rating]" value="2">
+                                        <label for="r2" title="Not very confident">★</label>
+                                        <input type="radio" id="r1" name="solution[rating]" value="1">
+                                        <label for="r1" title="Just guessing">★</label>
+                                    </div>
+                                    <span class="rating-hint" id="rating-hint">Somewhat confident</span>
+                                </div>
+                            </div>
+
+                            <!-- Tips box -->
+                            <div class="sol-tips">
+                                <div class="sol-tips-title"><i class="fas fa-star"></i> Great solutions include</div>
+                                <ul>
+                                    <li>A clear explanation of <em>why</em> your approach works</li>
+                                    <li>Step-by-step breakdown or working code</li>
+                                    <li>Links to docs / resources if relevant</li>
+                                    <li>Honest confidence rating — others rely on it</li>
+                                </ul>
+                            </div>
+
+                            <!-- Textarea with toolbar -->
+                            <div class="approach-label">Your solution</div>
+                            <div class="sol-textarea-wrap">
+                                <div class="sol-toolbar">
+                                    <button type="button" class="sol-tool-btn" id="btn-bold" title="Bold"><b>B</b></button>
+                                    <button type="button" class="sol-tool-btn" id="btn-italic" title="Italic"><i>I</i></button>
+                                    <button type="button" class="sol-tool-btn" id="btn-list" title="Insert bullet">• List</button>
+                                    <div class="sol-tool-sep"></div>
+                                    <button type="button" class="sol-tool-btn" id="btn-code-mode" title="Toggle code mode">
+                                        <i class="fas fa-code"></i> Code mode
+                                    </button>
+                                </div>
+                                <textarea
+                                    name="solution[comment]"
+                                    id="sol-comment"
+                                    class="sol-textarea"
+                                    rows="7"
+                                    required
+                                    maxlength="5000"
+                                    placeholder="Explain your solution clearly. What's the key insight? Walk through your reasoning step by step…"></textarea>
+                            </div>
+
+                            <!-- Char count + hint -->
+                            <div class="sol-meta-row">
+                                <span class="char-count" id="char-count">0 / 5000</span>
+                                <span style="font-size:0.75rem;color:var(--text-dim);">Markdown-style formatting supported</span>
+                            </div>
+
+                            <!-- Submit row -->
+                            <div class="sol-submit-row">
+                                <button type="submit" class="btn btn-primary" id="sol-submit-btn">
+                                    <i class="fas fa-paper-plane"></i> Post Solution
+                                </button>
+                                <span class="sol-submit-note">
+                                    <i class="fas fa-shield-alt"></i> Help others, build rep
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <% } else { %>
+                <!-- Not logged in -->
+                <div class="sol-login-prompt">
+                    <i class="fas fa-lock"></i>
+                    <h4>Have a solution?</h4>
+                    <p>Log in to share your answer and help your fellow students solve this problem.</p>
+                    <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+                        <a href="/login" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Log in</a>
+                        <a href="/signup" class="btn btn-secondary">Create account</a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Sidebar: solutions list -->
+        <aside class="sidebar">
+            <div class="sidebar-block">
+                <div class="sidebar-block-head">
+                    <span class="sidebar-block-title">
+                        <i class="fas fa-comments" style="color:var(--primary-light);margin-right:0.3rem;font-size:0.85rem;"></i>
+                        Solutions
+                    </span>
+                    <span class="sidebar-block-count"><%= problem.solutions.length %></span>
+                </div>
+
+                <% if (problem.solutions.length === 0) { %>
+                    <div class="no-solutions">
+                        <i class="fas fa-comment-dots"></i>
+                        No solutions yet — be the first!<br>
+                        <small style="margin-top:0.3rem;display:block;">Your answer could make someone's day.</small>
+                    </div>
+                <% } else { %>
+                    <% problem.solutions.forEach((solution, idx) => { %>
+                        <div class="sol-card <%= solution.isAccepted ? 'sol-card-accepted' : '' %>" id="sol-<%= solution._id %>">
+
+                            <!-- Card head: author + accepted badge -->
+                            <div class="sol-card-head">
+                                <div class="sol-author-wrap">
+                                    <div class="sol-card-avatar"><%= solution.author.username.charAt(0).toUpperCase() %></div>
+                                    <span class="sol-card-name"><%= solution.author.username %></span>
+                                </div>
+                                <% if (solution.isAccepted) { %>
+                                    <span class="sol-accepted-badge"><i class="fas fa-check-circle"></i> Accepted</span>
+                                <% } %>
+                            </div>
+
+                            <!-- Star rating -->
+                            <div class="sol-card-stars">
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <span class="<%= i <= solution.rating ? 'sol-star-full' : 'sol-star-empty' %>">★</span>
+                                <% } %>
+                                <span style="font-size:0.7rem;color:var(--text-dim);margin-left:4px;"><%= ['','Guessing','Uncertain','Moderate','Confident','Very confident'][solution.rating] %></span>
+                            </div>
+
+                            <!-- Solution body (collapsible) -->
+                            <div class="sol-card-body" id="sol-body-<%= idx %>">
+                                <%= solution.comment %>
+                            </div>
+
+                            <!-- Footer: date + actions -->
+                            <div class="sol-card-foot">
+                                <span class="sol-card-date">
+                                    <i class="far fa-clock"></i>
+                                    <%= new Date(solution.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) %>
+                                </span>
+                                <div class="sol-card-actions">
+                                    <button class="sol-expand-btn" onclick="toggleSol(<%= idx %>)" id="expand-<%= idx %>">
+                                        Read more
+                                    </button>
+                                    <!-- Upvote button -->
+                                    <% if (currUser) { %>
+                                        <form method="POST" action="/problems/<%= problem._id %>/solutions/<%= solution._id %>/upvote" style="display:inline;">
+                                            <button class="upvote-btn <%= (solution.upvotedBy && solution.upvotedBy.some(uid => uid.equals(currUser._id))) ? 'upvoted' : '' %>" title="Upvote this solution">
+                                                <i class="fas fa-arrow-up"></i> <%= solution.upvotes || 0 %>
+                                            </button>
+                                        </form>
+                                    <% } else { %>
+                                        <span class="upvote-btn" style="cursor:default">
+                                            <i class="fas fa-arrow-up"></i> <%= solution.upvotes || 0 %>
+                                        </span>
+                                    <% } %>
+
+                                    <% if (currUser && currUser._id.equals(problem.author._id) && !solution.isAccepted) { %>
+                                        <form method="POST" action="/problems/<%= problem._id %>/solutions/<%= solution._id %>/accept" style="display:inline;">
+                                            <button class="btn btn-secondary" style="font-size:0.7rem;padding:2px 8px;color:var(--green);border-color:rgba(34,197,94,0.3);" title="Accept this solution">
+                                                <i class="fas fa-check"></i> Accept
+                                            </button>
+                                        </form>
+                                    <% } %>
+
+                                    <% if (currUser && currUser._id.equals(solution.author._id)) { %>
+                                        <form method="POST" action="/problems/<%= problem._id %>/solutions/<%= solution._id %>?_method=DELETE"
+                                              style="display:inline;" onsubmit="return confirm('Delete your solution?');">
+                                            <button class="btn btn-secondary" style="font-size:0.7rem;padding:2px 8px;color:var(--red);border-color:rgba(239,68,68,0.3);" title="Delete solution">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+        </aside>
+    </div>
+</div>
+</div>
+
+<script>
+/* ── Rating label ── */
+const ratingLabels = { 1:'Just guessing', 2:'Not very confident', 3:'Somewhat confident', 4:'Fairly confident', 5:'Very confident!' };
+document.querySelectorAll('input[name="solution[rating]"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        document.getElementById('rating-hint').textContent = ratingLabels[this.value] || '';
+    });
+});
+
+/* ── Char counter ── */
+const textarea = document.getElementById('sol-comment');
+const charCount = document.getElementById('char-count');
+if (textarea && charCount) {
+    textarea.addEventListener('input', function() {
+        const len = this.value.length;
+        charCount.textContent = `${len} / 5000`;
+        charCount.className = 'char-count' + (len > 4500 ? ' error' : len > 3500 ? ' warn' : '');
+    });
+}
+
+/* ── Code mode toggle ── */
+const codeModeBtn = document.getElementById('btn-code-mode');
+if (codeModeBtn && textarea) {
+    codeModeBtn.addEventListener('click', function() {
+        textarea.classList.toggle('code-mode');
+        this.classList.toggle('active');
+        this.querySelector('i').className = textarea.classList.contains('code-mode')
+            ? 'fas fa-font' : 'fas fa-code';
+    });
+}
+
+/* ── Formatting shortcuts ── */
+function wrapSelection(before, after) {
+    const ta = document.getElementById('sol-comment');
+    if (!ta) return;
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    const sel = ta.value.substring(start, end);
+    ta.value = ta.value.substring(0, start) + before + sel + after + ta.value.substring(end);
+    ta.selectionStart = start + before.length;
+    ta.selectionEnd = end + before.length;
+    ta.focus();
+    ta.dispatchEvent(new Event('input'));
+}
+
+document.getElementById('btn-bold')?.addEventListener('click', () => wrapSelection('**', '**'));
+document.getElementById('btn-italic')?.addEventListener('click', () => wrapSelection('_', '_'));
+document.getElementById('btn-list')?.addEventListener('click', () => wrapSelection('\n- ', ''));
+
+/* ── Expand/collapse solution cards ── */
+function toggleSol(idx) {
+    const body = document.getElementById('sol-body-' + idx);
+    const btn  = document.getElementById('expand-' + idx);
+    if (!body || !btn) return;
+    const expanded = body.classList.toggle('expanded');
+    btn.textContent = expanded ? 'Show less' : 'Read more';
+}
+
+/* ── Approach chip → auto code mode ── */
+document.querySelectorAll('.approach-chip').forEach(chip => {
+    chip.addEventListener('change', function() {
+        const isCode = this.value === 'Code';
+        const ta = document.getElementById('sol-comment');
+        const btn = document.getElementById('btn-code-mode');
+        if (!ta || !btn) return;
+        if (isCode && !ta.classList.contains('code-mode')) {
+            ta.classList.add('code-mode');
+            btn.classList.add('active');
+        }
+    });
+});
+
+/* ── Image Lightbox ── */
+(function() {
+    const trigger = document.getElementById('img-zoom-trigger');
+    if (!trigger) return;
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox-overlay';
+    overlay.innerHTML = `
+        <button class="lightbox-close" id="lightbox-close" title="Close (ESC)">✕</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="Zoomed image">
+    `;
+    document.body.appendChild(overlay);
+
+    const lb = document.getElementById('lightbox-img');
+    const src = trigger.querySelector('img')?.src;
+
+    function openLightbox() {
+        lb.src = src;
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    trigger.addEventListener('click', openLightbox);
+    document.getElementById('lightbox-close').addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+})();
+</script>

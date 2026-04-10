@@ -1,0 +1,402 @@
+<% layout('/layouts/boilerplate') %>
+<style>
+    .profile-page { padding: 2.5rem 0 4rem; }
+
+    /* Profile Hero */
+    .profile-hero {
+        background: var(--surface);
+        border: 1px solid rgba(124,58,237,0.15);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-hero::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 300px; height: 300px;
+        background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .profile-hero-inner {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.75rem;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar {
+        width: 88px;
+        height: 88px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 0 24px rgba(124,58,237,0.3);
+    }
+
+    .profile-info { flex: 1; min-width: 0; }
+
+    .profile-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        margin-bottom: 0.2rem;
+    }
+
+    .profile-username {
+        font-size: 0.88rem;
+        color: var(--text-dim);
+        margin-bottom: 0.85rem;
+    }
+
+    .profile-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+    .badge-branch { background: var(--primary-bg); color: var(--primary-light); border: 1px solid var(--primary-border); }
+    .badge-year   { background: var(--accent-bg); color: var(--accent-light); border: 1px solid var(--accent-border); }
+    .badge-enroll { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); font-family: monospace; }
+
+    .profile-bio {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        max-width: 520px;
+        margin-bottom: 1rem;
+    }
+
+    /* Skills */
+    .profile-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Social links */
+    .profile-social {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        border: 1px solid var(--border);
+        padding: 0.3rem 0.7rem;
+        border-radius: 8px;
+        transition: all 0.18s;
+    }
+
+    .social-link:hover { color: var(--primary-light); border-color: var(--primary-border); background: var(--primary-bg); }
+    .social-link i { font-size: 0.88rem; }
+
+    /* Stats row */
+    .profile-stats {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .stat-box { display: flex; flex-direction: column; gap: 2px; }
+
+    .stat-box-num {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        line-height: 1;
+    }
+
+    .stat-box-num.colored { color: var(--primary-light); }
+    .stat-box-lbl { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; }
+
+    /* Problems grid */
+    .profile-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--text-dim);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .profile-section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    .profile-problems-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .mini-card {
+        background: var(--surface);
+        padding: 1.1rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: background 0.15s;
+        position: relative;
+    }
+
+    .mini-card:hover { background: rgba(124,58,237,0.04); }
+
+    .mini-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    .mini-chips { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+
+    .mini-chip {
+        font-size: 0.67rem;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 4px;
+        background: var(--primary-bg);
+        color: var(--primary-light);
+        border: 1px solid var(--primary-border);
+    }
+
+    .mini-status {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .mini-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .mini-dot-open { background: var(--primary-light); }
+    .mini-dot-solved { background: var(--green); }
+
+    .mini-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+    }
+
+    .mini-link { position: absolute; inset: 0; z-index: 1; }
+
+    .empty-profile {
+        background: var(--surface);
+        border: 1px dashed rgba(124,58,237,0.2);
+        border-radius: 14px;
+        padding: 2.5rem;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        margin-bottom: 2rem;
+    }
+
+    .empty-profile i { display: block; font-size: 1.5rem; margin-bottom: 0.5rem; opacity: 0.3; }
+
+    @media (max-width: 576px) {
+        .profile-hero-inner { flex-direction: column; gap: 1.25rem; }
+        .profile-avatar { width: 64px; height: 64px; font-size: 1.5rem; }
+        .profile-stats { gap: 1.25rem; }
+    }
+</style>
+
+<div class="profile-page">
+<div class="container">
+
+    <!-- Profile Hero -->
+    <div class="profile-hero">
+        <div class="profile-hero-inner">
+            <!-- Avatar -->
+            <div class="profile-avatar" style="background: <%= profileUser.avatarColor || 'linear-gradient(135deg, #7c3aed, #06b6d4)' %>;">
+                <%= profileUser.username.charAt(0).toUpperCase() %>
+            </div>
+
+            <div class="profile-info">
+                <div class="profile-name"><%= profileUser.fullName || profileUser.username %></div>
+                <div class="profile-username">@<%= profileUser.username %></div>
+
+                <div class="profile-badges">
+                    <% if (profileUser.branch) { %>
+                        <span class="profile-badge badge-branch">
+                            <i class="fas fa-graduation-cap"></i> <%= profileUser.branch %>
+                        </span>
+                    <% } %>
+                    <% if (profileUser.year) { %>
+                        <span class="profile-badge badge-year">
+                            <i class="fas fa-calendar"></i> Year <%= profileUser.year %>
+                        </span>
+                    <% } %>
+                    <% if (profileUser.enrollmentNo) { %>
+                        <span class="profile-badge badge-enroll">
+                            <i class="fas fa-id-card"></i> <%= profileUser.enrollmentNo %>
+                        </span>
+                    <% } %>
+                </div>
+
+                <% if (profileUser.bio) { %>
+                    <p class="profile-bio"><%= profileUser.bio %></p>
+                <% } %>
+
+                <!-- Skills -->
+                <% if (profileUser.skills && profileUser.skills.length > 0) { %>
+                    <div class="profile-skills">
+                        <% profileUser.skills.forEach(skill => { %>
+                            <span class="skill-tag"><%= skill %></span>
+                        <% }) %>
+                    </div>
+                <% } %>
+
+                <!-- Social links -->
+                <% if (profileUser.github || profileUser.linkedin) { %>
+                    <div class="profile-social">
+                        <% if (profileUser.github) { %>
+                            <a href="<%= profileUser.github %>" target="_blank" class="social-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        <% } %>
+                        <% if (profileUser.linkedin) { %>
+                            <a href="<%= profileUser.linkedin %>" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </a>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <!-- Stats -->
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <span class="stat-box-num colored"><%= problems.length %></span>
+                        <span class="stat-box-lbl">Problems Posted</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-num colored"><%= problems.filter(p => p.status === 'solved').length %></span>
+                        <span class="stat-box-lbl">Solved</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-num colored"><%= solutionsGiven %></span>
+                        <span class="stat-box-lbl">Answers Given</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-num colored"><%= totalUpvotes %></span>
+                        <span class="stat-box-lbl">Upvotes Received</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-num" style="font-size:0.88rem;color:var(--text-dim);">
+                            <%= new Date(profileUser.createdAt).toLocaleDateString('en-IN', {month:'short', year:'numeric'}) %>
+                        </span>
+                        <span class="stat-box-lbl">Joined</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Own profile actions -->
+            <% if (currUser && currUser._id.equals(profileUser._id)) { %>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;flex-shrink:0;">
+                    <a href="/problems/new" class="btn btn-primary" style="font-size:0.82rem;padding:0.42rem 1rem;">
+                        <i class="fas fa-plus"></i> Post Problem
+                    </a>
+                    <a href="/leaderboard" class="btn btn-ghost" style="font-size:0.82rem;padding:0.42rem 1rem;">
+                        <i class="fas fa-trophy"></i> Leaderboard
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Posted Problems -->
+    <div class="profile-section-title">
+        <i class="fas fa-layer-group" style="color:var(--primary-light);"></i>
+        Posted Problems
+    </div>
+
+    <% if (problems.length === 0) { %>
+        <div class="empty-profile">
+            <i class="fas fa-inbox"></i>
+            No problems posted yet.
+            <% if (currUser && currUser._id.equals(profileUser._id)) { %>
+                <br><a href="/problems/new" class="btn btn-primary" style="margin-top:1rem;font-size:0.82rem;">
+                    <i class="fas fa-plus"></i> Post your first problem
+                </a>
+            <% } %>
+        </div>
+    <% } else { %>
+        <div class="profile-problems-grid">
+            <% for (let p of problems) { %>
+                <div class="mini-card">
+                    <div class="mini-card-top">
+                        <div class="mini-chips">
+                            <span class="mini-chip"><%= p.category %></span>
+                            <span class="mini-chip"><%= p.type %></span>
+                        </div>
+                        <div class="mini-status">
+                            <span class="mini-dot <%= p.status === 'solved' ? 'mini-dot-solved' : 'mini-dot-open' %>"></span>
+                            <span style="color:<%= p.status === 'solved' ? 'var(--green)' : 'var(--primary-light)' %>"><%= p.status %></span>
+                        </div>
+                    </div>
+                    <div class="mini-title"><%= p.title %></div>
+                    <div style="font-size:0.72rem;color:var(--text-dim);display:flex;align-items:center;gap:0.5rem;">
+                        <span><i class="fas fa-comment-dots" style="color:var(--accent);"></i> <%= p.solutions.length %> answers</span>
+                        <span>·</span>
+                        <span><i class="fas fa-signal" style="color:var(--text-dim);"></i> <%= p.difficulty %></span>
+                    </div>
+                    <a href="/problems/<%= p._id %>" class="mini-link" aria-label="<%= p.title %>"></a>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+
+</div>
+</div>

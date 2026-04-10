@@ -1,0 +1,411 @@
+<% layout('/layouts/boilerplate') %>
+<style>
+    .form-page { padding: 2.5rem 0 4rem; }
+
+    .form-page-header { margin-bottom: 2rem; }
+    .form-page-header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.4px; color: var(--text); margin-bottom: 0.3rem; }
+    .form-page-header p { font-size: 0.875rem; color: var(--text-muted); }
+
+    .form-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        max-width: 760px;
+    }
+
+    .form-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .form-section:last-of-type { border-bottom: none; }
+
+    .form-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-dim);
+        margin-bottom: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .form-section-title i { color: var(--primary-light); }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-field { margin-bottom: 1rem; }
+    .form-field:last-child { margin-bottom: 0; }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 0.35rem;
+    }
+
+    .form-label-opt {
+        font-size: 0.72rem;
+        font-weight: 400;
+        color: var(--text-dim);
+    }
+
+    .form-sublabel {
+        font-size: 0.73rem;
+        color: var(--text-dim);
+        margin-top: 0.25rem;
+    }
+
+    .form-control {
+        width: 100%;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.55rem 0.85rem;
+        color: var(--text);
+        font-size: 0.88rem;
+        font-family: var(--font);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .form-control::placeholder { color: var(--text-dim); }
+    .form-control option { background: var(--bg-card); }
+
+    /* Char count */
+    .char-counter {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+    }
+
+    .char-counter.warn { color: var(--amber); }
+    .char-counter.error { color: var(--red); }
+
+    /* Title counter row */
+    .field-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.35rem;
+    }
+
+    /* Difficulty chips */
+    .diff-chips { display: flex; gap: 0.4rem; }
+    .diff-radio { display: none; }
+
+    .diff-label {
+        padding: 0.35rem 0.9rem;
+        border-radius: var(--radius-sm);
+        border: 1.5px solid var(--border);
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s;
+        user-select: none;
+    }
+
+    .diff-radio[value="easy"]:checked + .diff-label { background: rgba(16,185,129,0.15); border-color: var(--green); color: var(--green); }
+    .diff-radio[value="medium"]:checked + .diff-label { background: rgba(245,158,11,0.15); border-color: var(--amber); color: var(--amber); }
+    .diff-radio[value="hard"]:checked + .diff-label { background: rgba(239,68,68,0.15); border-color: var(--red); color: var(--red); }
+    .diff-label:hover { border-color: var(--text-dim); }
+
+    /* MBA tip */
+    .mba-tip {
+        background: rgba(245,158,11,0.06);
+        border: 1px solid rgba(245,158,11,0.2);
+        border-radius: var(--radius);
+        padding: 0.6rem 0.9rem;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-top: 0.75rem;
+        display: none;
+    }
+
+    .mba-tip.show { display: block; }
+    .mba-tip i { color: var(--amber); margin-right: 0.3rem; }
+
+    /* Image preview */
+    .img-preview-wrap {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        display: none;
+        margin-bottom: 0.75rem;
+    }
+
+    .img-preview-wrap.show { display: block; }
+    .img-preview-wrap img { width: 100%; max-height: 200px; object-fit: cover; display: block; }
+    .img-preview-label { padding: 0.35rem 0.75rem; font-size: 0.72rem; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+
+    /* File drop */
+    .file-drop {
+        border: 1.5px dashed var(--border);
+        border-radius: var(--radius);
+        padding: 1.25rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+        position: relative;
+    }
+
+    .file-drop:hover { border-color: var(--primary); background: var(--primary-bg); }
+    .file-drop input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .file-drop-icon { font-size: 1.25rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .file-drop-text { font-size: 0.8rem; color: var(--text-muted); }
+    .file-drop-name { font-size: 0.75rem; color: var(--amber); margin-top: 0.3rem; font-weight: 600; }
+
+    /* Tag chips */
+    .tag-preview-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+    .tag-chip { background: rgba(139,148,158,0.1); border: 1px solid var(--border); color: var(--text-muted); border-radius: var(--radius-sm); padding: 2px 9px; font-size: 0.72rem; font-family: monospace; }
+
+    /* Form footer */
+    .form-footer { padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border-top: 1px solid var(--border); }
+
+    @media (max-width: 576px) {
+        .form-row { grid-template-columns: 1fr; }
+        .form-row-2 { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="form-page">
+<div class="container">
+    <div class="form-page-header">
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;letter-spacing:-0.5px;"><i class="fas fa-plus-circle" style="color:var(--primary-light);"></i> Post a Problem</h1>
+        <p>Describe your challenge clearly — the Campus Connect community is here to help.</p>
+    </div>
+
+    <div class="form-card">
+        <form method="POST" action="/problems" novalidate enctype="multipart/form-data">
+
+            <!-- Section 1: Problem Details -->
+            <div class="form-section">
+                <div class="form-section-title"><i class="fas fa-pen-nib"></i> Problem Details</div>
+
+                <div class="form-field">
+                    <div class="field-top">
+                        <label for="title" class="form-label" style="margin-bottom:0;">Title <span style="color:var(--red);">*</span></label>
+                        <span class="char-counter" id="title-count">0 / 100</span>
+                    </div>
+                    <input id="title" type="text" name="problem[title]" class="form-control" required maxlength="100"
+                        placeholder="e.g. How to implement binary search? / MBA Case Study on Brand Positioning…"/>
+                    <div class="form-sublabel">Be specific — a clear title gets more answers faster.</div>
+                </div>
+
+                <div class="form-field">
+                    <div class="field-top">
+                        <label for="description" class="form-label" style="margin-bottom:0;">Description <span style="color:var(--red);">*</span></label>
+                        <span class="char-counter" id="desc-count">0 / 3000</span>
+                    </div>
+                    <textarea id="description" name="problem[description]" class="form-control" rows="6" required maxlength="3000"
+                        placeholder="Describe your problem in detail. What have you tried? What's the expected result? The more context you give, the better the answers…"></textarea>
+                </div>
+            </div>
+
+            <!-- Section 2: Categorize -->
+            <div class="form-section">
+                <div class="form-section-title"><i class="fas fa-tag"></i> Categorize</div>
+
+                <div class="form-row">
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="category" class="form-label">Category <span style="color:var(--red);">*</span></label>
+                        <select name="problem[category]" id="category" class="form-control" required>
+                            <option value="" disabled selected>Select…</option>
+                            <option value="CSE">💻 CSE — Computer Science</option>
+                            <option value="ECE">⚡ ECE — Electronics</option>
+                            <option value="IT">🌐 IT — Information Technology</option>
+                            <option value="MBA">📊 MBA — Business</option>
+                            <option value="Other">🎓 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="type" class="form-label">Type <span style="color:var(--red);">*</span></label>
+                        <select name="problem[type]" id="type" class="form-control" required>
+                            <option value="" disabled selected>Select…</option>
+                            <optgroup label="General">
+                                <option value="Homework">Homework / Assignment</option>
+                                <option value="Project">Project</option>
+                                <option value="Exam">Exam Prep</option>
+                                <option value="Placement">Placement / Interview</option>
+                                <option value="Campus">Campus / General</option>
+                                <option value="Lab">Lab Work</option>
+                            </optgroup>
+                            <optgroup label="MBA Specific" id="mba-group">
+                                <option value="Case Study">Case Study</option>
+                                <option value="Presentation">Presentation</option>
+                                <option value="Research">Research Paper</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="difficulty" class="form-label">Difficulty <span style="color:var(--red);">*</span></label>
+                        <select name="problem[difficulty]" id="difficulty" class="form-control" required>
+                            <option value="" disabled selected>Select difficulty…</option>
+                            <option value="easy">🟢 Easy</option>
+                            <option value="medium">🟡 Medium</option>
+                            <option value="hard">🔴 Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- MBA tip -->
+                <div class="mba-tip" id="mba-tip">
+                    <i class="fas fa-chart-bar"></i>
+                    <strong>MBA students:</strong> You can post Case Studies, Presentations, and Research problems. Use the Type dropdown above to pick the right format.
+                </div>
+            </div>
+
+            <!-- Section 3: Deadline -->
+            <div class="form-section">
+                <div class="form-section-title"><i class="fas fa-clock"></i> Urgency <span style="margin-left:auto;font-size:0.68rem;font-weight:400;color:var(--text-dim);text-transform:none;letter-spacing:0;">optional</span></div>
+                <div class="form-row-2">
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="deadline" class="form-label">Deadline / Exam Date <span class="form-label-opt">(optional)</span></label>
+                        <input type="date" name="problem[deadline]" id="deadline" class="form-control">
+                        <div class="form-sublabel">Helps the community prioritize urgent issues.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Tags & Image -->
+            <div class="form-section">
+                <div class="form-section-title"><i class="fas fa-hashtag"></i> Tags & Image</div>
+
+                <div class="form-field">
+                    <label for="tags-input" class="form-label">
+                        Tags <span class="form-label-opt">comma-separated, optional</span>
+                    </label>
+                    <input type="text" name="problem[tags]" id="tags-input" class="form-control"
+                        placeholder="e.g. JavaScript, DBMS, algorithms, brand-strategy"/>
+                    <div id="tag-preview" class="tag-preview-row"></div>
+                </div>
+
+                <div class="form-field" style="margin-bottom:0;">
+                    <label class="form-label">Image / Screenshot <span class="form-label-opt">optional</span></label>
+                    <div id="img-preview-wrap" class="img-preview-wrap">
+                        <img id="img-preview" src="" alt="Preview">
+                        <div class="img-preview-label">
+                            <span id="file-name"></span>
+                            <button type="button" id="remove-img" style="background:none;border:none;color:var(--red);font-size:0.72rem;cursor:pointer;">✕ Remove</button>
+                        </div>
+                    </div>
+                    <div class="file-drop" id="file-drop">
+                        <input type="file" name="image" id="image-input" accept="image/*">
+                        <div class="file-drop-icon"><i class="fas fa-image"></i></div>
+                        <div class="file-drop-text">Click or drag to upload a screenshot / diagram</div>
+                        <div class="file-drop-name" id="file-drop-name"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-paper-plane"></i> Post Problem
+                </button>
+                <a href="/problems" class="btn btn-secondary btn-lg">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+/* Title counter */
+const titleInput = document.getElementById('title');
+const titleCount = document.getElementById('title-count');
+titleInput?.addEventListener('input', function() {
+    const l = this.value.length;
+    titleCount.textContent = `${l} / 100`;
+    titleCount.className = 'char-counter' + (l > 90 ? ' warn' : '');
+});
+
+/* Description counter */
+const descInput = document.getElementById('description');
+const descCount = document.getElementById('desc-count');
+descInput?.addEventListener('input', function() {
+    const l = this.value.length;
+    descCount.textContent = `${l} / 3000`;
+    descCount.className = 'char-counter' + (l > 2700 ? ' error' : l > 2000 ? ' warn' : '');
+});
+
+/* Difficulty chips — sync to hidden input */
+document.querySelectorAll('.diff-radio').forEach(r => {
+    r.addEventListener('change', function() {
+        document.getElementById('diff-hidden').value = this.value;
+    });
+});
+
+/* Fix: prevent double submission via hidden input */
+document.querySelector('form').addEventListener('submit', function() {
+    const checked = document.querySelector('.diff-radio:checked');
+    if (checked) document.getElementById('diff-hidden').value = checked.value;
+});
+
+/* MBA category tip */
+const categorySelect = document.getElementById('category');
+const mbaTip = document.getElementById('mba-tip');
+categorySelect?.addEventListener('change', function() {
+    mbaTip.classList.toggle('show', this.value === 'MBA');
+    if (this.value === 'MBA') {
+        document.getElementById('type').value = '';
+    }
+});
+
+/* Tags preview */
+document.getElementById('tags-input')?.addEventListener('input', function() {
+    const tags = this.value.split(',').map(t => t.trim()).filter(Boolean);
+    document.getElementById('tag-preview').innerHTML =
+        tags.map(t => `<span class="tag-chip">${t}</span>`).join('');
+});
+
+/* Image preview */
+const imageInput = document.getElementById('image-input');
+const imgPreviewWrap = document.getElementById('img-preview-wrap');
+const imgPreview = document.getElementById('img-preview');
+const fileDropName = document.getElementById('file-drop-name');
+const fileNameSpan = document.getElementById('file-name');
+
+imageInput?.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    fileDropName.textContent = file.name;
+    fileNameSpan.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = e => {
+        imgPreview.src = e.target.result;
+        imgPreviewWrap.classList.add('show');
+    };
+    reader.readAsDataURL(file);
+});
+
+document.getElementById('remove-img')?.addEventListener('click', function() {
+    imageInput.value = '';
+    imgPreviewWrap.classList.remove('show');
+    imgPreview.src = '';
+    fileDropName.textContent = '';
+    fileNameSpan.textContent = '';
+});
+</script>

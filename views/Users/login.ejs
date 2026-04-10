@@ -1,0 +1,177 @@
+<% layout("/layouts/boilerplate")%>
+<style>
+    .auth-page {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        position: relative;
+    }
+
+    .auth-page::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(ellipse at 30% 30%, rgba(124,58,237,0.08) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-brand {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-brand-mark {
+        width: 52px;
+        height: 52px;
+        background: linear-gradient(135deg, #7c3aed, #06b6d4);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 0 24px rgba(124,58,237,0.4);
+    }
+
+    .auth-brand h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        margin-bottom: 0.3rem;
+    }
+
+    .auth-brand p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .auth-form-card {
+        background: var(--surface);
+        border: 1px solid rgba(124,58,237,0.15);
+        border-radius: 16px;
+        padding: 1.75rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(124,58,237,0.08);
+    }
+
+    .form-field { margin-bottom: 1.1rem; }
+    .form-field:last-of-type { margin-bottom: 1.4rem; }
+
+    .pass-wrap {
+        position: relative;
+    }
+
+    .pass-toggle {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        padding: 0;
+        font-size: 0.875rem;
+        transition: color 0.15s;
+    }
+
+    .pass-toggle:hover { color: var(--primary-light); }
+
+    .auth-submit {
+        width: 100%;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .auth-divider {
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin: 1rem 0;
+        position: relative;
+    }
+
+    .auth-alt {
+        text-align: center;
+        font-size: 0.83rem;
+        color: var(--text-muted);
+    }
+
+    .auth-alt a {
+        color: var(--primary-light);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .auth-alt a:hover { text-decoration: underline; }
+</style>
+
+<div class="auth-page">
+<div class="auth-card">
+    <div class="auth-brand">
+        <div class="auth-brand-mark">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" fill="white" opacity="0.9"/>
+                <path d="M2 17l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+                <path d="M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
+        </div>
+        <h1>Welcome back</h1>
+        <p>Sign in to Campus Connect</p>
+    </div>
+
+    <div class="auth-form-card">
+        <form action="/login" method="POST">
+            <div class="form-field">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-control" required
+                    placeholder="Your username" autocomplete="username">
+            </div>
+
+            <div class="form-field">
+                <label for="password" class="form-label">Password</label>
+                <div class="pass-wrap">
+                    <input type="password" name="password" id="password" class="form-control" required
+                        placeholder="Your password" autocomplete="current-password" style="padding-right:2.5rem;">
+                    <button type="button" class="pass-toggle" onclick="togglePass('password', this)" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye" id="pass-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit">
+                <i class="fas fa-sign-in-alt"></i> Sign in
+            </button>
+        </form>
+    </div>
+
+    <div class="auth-alt">
+        Don't have an account? <a href="/signup">Join Campus Connect</a>
+    </div>
+</div>
+</div>
+
+<script>
+function togglePass(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+</script>

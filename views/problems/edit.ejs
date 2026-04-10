@@ -1,0 +1,137 @@
+<% layout('/layouts/boilerplate') %>
+<style>
+    .form-page { padding: 2.5rem 0 4rem; }
+    .form-page-header { margin-bottom: 2rem; }
+    .form-page-header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.4px; color: var(--text); margin-bottom: 0.3rem; }
+    .form-page-header p { font-size: 0.875rem; color: var(--text-muted); }
+    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; max-width: 720px; }
+    .form-section { margin-bottom: 1.5rem; }
+    .form-section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-dim); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .form-field { margin-bottom: 1rem; }
+    .img-current { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem; }
+    .img-current img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .img-current-label { padding: 0.4rem 0.75rem; font-size: 0.75rem; color: var(--text-dim); background: var(--surface-2); border-top: 1px solid var(--border); }
+    .file-drop { border: 1px dashed var(--border-hover); border-radius: var(--radius); padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; }
+    .file-drop:hover { border-color: var(--amber); background: var(--amber-bg); }
+    .file-drop input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .file-drop-icon { font-size: 1.5rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .file-drop-text { font-size: 0.82rem; color: var(--text-muted); }
+    .file-drop-name { font-size: 0.78rem; color: var(--amber); margin-top: 0.35rem; font-weight: 600; }
+    .tag-preview-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+    .tag-chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); border-radius: var(--radius-sm); padding: 2px 8px; font-size: 0.75rem; font-family: var(--font-mono); }
+    .form-footer { display: flex; align-items: center; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); margin-top: 1.5rem; }
+    @media (max-width: 576px) { .form-card { padding: 1.25rem; } .form-row { grid-template-columns: 1fr; } }
+</style>
+
+<div class="form-page">
+<div class="container">
+    <div class="form-page-header">
+        <h1><i class="fas fa-edit" style="color:var(--amber);font-size:1.1rem;"></i> Edit Problem</h1>
+        <p>Update the details of your problem posting.</p>
+    </div>
+
+    <div class="form-card">
+        <form method="POST" action="/problems/<%= problem._id %>?_method=PUT" class="needs-validation" novalidate enctype="multipart/form-data">
+
+            <div class="form-section">
+                <div class="form-section-title">Problem Details</div>
+
+                <div class="form-field">
+                    <label for="title" class="form-label">Title <span style="color:var(--red);">*</span></label>
+                    <input id="title" type="text" name="problem[title]" class="form-control" required value="<%= problem.title %>" />
+                </div>
+
+                <div class="form-field">
+                    <label for="description" class="form-label">Description <span style="color:var(--red);">*</span></label>
+                    <textarea id="description" name="problem[description]" class="form-control" rows="6" required><%= problem.description %></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">Categorize</div>
+                <div class="form-row">
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="category" class="form-label">Category <span style="color:var(--red);">*</span></label>
+                        <select name="problem[category]" id="category" class="form-select form-control" required>
+                            <option value="CSE"      <%= problem.category === 'CSE' ? 'selected' : '' %>>Computer Science (CSE)</option>
+                            <option value="ECE"      <%= problem.category === 'ECE' ? 'selected' : '' %>>Electronics (ECE)</option>
+                            <option value="IT"       <%= problem.category === 'IT'  ? 'selected' : '' %>>Information Technology</option>
+                            <option value="MBA"      <%= problem.category === 'MBA' ? 'selected' : '' %>>Business (MBA)</option>
+                            <option value="Other"    <%= problem.category === 'Other' ? 'selected' : '' %>>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="type" class="form-label">Type <span style="color:var(--red);">*</span></label>
+                        <select name="problem[type]" id="type" class="form-select form-control" required>
+                            <option value="Homework"  <%= problem.type === 'Homework'  ? 'selected' : '' %>>Homework</option>
+                            <option value="Project"   <%= problem.type === 'Project'   ? 'selected' : '' %>>Project</option>
+                            <option value="Exam"      <%= problem.type === 'Exam'      ? 'selected' : '' %>>Exam Prep</option>
+                            <option value="Placement" <%= problem.type === 'Placement' ? 'selected' : '' %>>Placement</option>
+                            <option value="Campus"    <%= problem.type === 'Campus'    ? 'selected' : '' %>>Campus</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="difficulty" class="form-label">Difficulty <span style="color:var(--red);">*</span></label>
+                        <select name="problem[difficulty]" id="difficulty" class="form-select form-control" required>
+                            <option value="easy"   <%= problem.difficulty === 'easy'   ? 'selected' : '' %>>Easy</option>
+                            <option value="medium" <%= problem.difficulty === 'medium' ? 'selected' : '' %>>Medium</option>
+                            <option value="hard"   <%= problem.difficulty === 'hard'   ? 'selected' : '' %>>Hard</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">Tags &amp; Image</div>
+
+                <div class="form-field">
+                    <label for="tags-input" class="form-label">Tags</label>
+                    <input type="text" name="problem[tags]" id="tags-input" class="form-control"
+                        value="<%= problem.tags ? problem.tags.join(', ') : '' %>"
+                        placeholder="comma-separated" />
+                    <div id="tag-preview" class="tag-preview-row">
+                        <% if (problem.tags) { problem.tags.forEach(t => { %><span class="tag-chip"><%= t %></span><% }) } %>
+                    </div>
+                </div>
+
+                <% if (originalImageUrl) { %>
+                    <div class="img-current">
+                        <img src="<%= originalImageUrl %>" alt="Current image">
+                        <div class="img-current-label">Current image — upload a new one to replace it</div>
+                    </div>
+                <% } %>
+
+                <div class="form-field" style="margin-bottom:0;">
+                    <label class="form-label">Replace Image <span style="color:var(--text-dim);font-weight:400;">(optional)</span></label>
+                    <div class="file-drop">
+                        <input type="file" name="image" id="image-input" accept="image/*">
+                        <div class="file-drop-icon"><i class="fas fa-image"></i></div>
+                        <div class="file-drop-text">Click to upload a new image</div>
+                        <div class="file-drop-name" id="file-name"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="/problems/<%= problem._id %>" class="btn btn-secondary btn-lg">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+    document.getElementById('tags-input').addEventListener('input', function() {
+        const tags = this.value.split(',').map(t => t.trim()).filter(Boolean);
+        document.getElementById('tag-preview').innerHTML =
+            tags.map(t => `<span class="tag-chip">${t}</span>`).join('');
+    });
+
+    document.getElementById('image-input').addEventListener('change', function() {
+        document.getElementById('file-name').textContent = this.files[0]?.name || '';
+    });
+</script>

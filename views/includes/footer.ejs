@@ -1,0 +1,269 @@
+<style>
+    .site-footer {
+        border-top: 1px solid rgba(124,58,237,0.12);
+        background: rgba(5,8,22,0.95);
+        margin-top: auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .footer-top {
+        padding: 3rem 0 2.5rem;
+        display: grid;
+        grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
+        gap: 2rem;
+    }
+
+    .footer-brand-col { display: flex; flex-direction: column; }
+
+    .footer-brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        text-decoration: none;
+        margin-bottom: 0.9rem;
+    }
+
+    .footer-logo-mark {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, #7c3aed, #06b6d4);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 0 14px rgba(124,58,237,0.35);
+    }
+
+    .footer-logo-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.3px;
+    }
+
+    .footer-logo-name span {
+        background: linear-gradient(135deg, #a78bfa, #67e8f9);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .footer-tagline {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        max-width: 240px;
+        margin-bottom: 1rem;
+    }
+
+    .footer-made-with {
+        font-size: 0.73rem;
+        color: var(--text-dim);
+    }
+
+    .footer-made-with span { color: var(--primary-light); }
+
+    .footer-col-title {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--text-dim);
+        margin-bottom: 0.8rem;
+    }
+
+    .footer-col-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer-col-links a {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: color 0.18s;
+    }
+
+    .footer-col-links a:hover { color: var(--primary-light); }
+
+    .footer-col-links a i {
+        width: 14px;
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        transition: color 0.18s;
+    }
+
+    .footer-col-links a:hover i { color: var(--primary-light); }
+
+    /* Creator card */
+    .footer-creator-card {
+        background: var(--primary-bg);
+        border: 1px solid var(--primary-border);
+        border-radius: 12px;
+        padding: 1rem 1.1rem;
+    }
+
+    .creator-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #7c3aed, #06b6d4);
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.65rem;
+    }
+
+    .creator-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.15rem;
+    }
+
+    .creator-role {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+        margin-bottom: 0.8rem;
+    }
+
+    .creator-links { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .creator-link {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: color 0.18s;
+    }
+
+    .creator-link:hover { color: var(--primary-light); }
+    .creator-link i { width: 14px; font-size: 0.75rem; color: var(--text-dim); }
+    .creator-link:hover i { color: var(--primary-light); }
+
+    /* Bottom bar */
+    .footer-bottom {
+        border-top: 1px solid rgba(124,58,237,0.08);
+        padding: 1rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-copy { font-size: 0.73rem; color: var(--text-dim); }
+
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+
+    .footer-bottom-links a {
+        font-size: 0.73rem;
+        color: var(--text-dim);
+        text-decoration: none;
+        transition: color 0.18s;
+    }
+
+    .footer-bottom-links a:hover { color: var(--primary-light); }
+
+    @media (max-width: 900px) {
+        .footer-top { grid-template-columns: 1fr 1fr; }
+        .footer-brand-col { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 480px) {
+        .footer-top { grid-template-columns: 1fr; }
+        .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+</style>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-top">
+
+            <!-- Brand -->
+            <div class="footer-brand-col">
+                <a class="footer-brand-logo" href="/">
+                    <div class="footer-logo-mark">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="white" opacity="0.9"/>
+                            <path d="M2 17l10 5 10-5" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+                            <path d="M2 12l10 5 10-5" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <span class="footer-logo-name">Campus<span>Connect</span></span>
+                </a>
+                <p class="footer-tagline">
+                    Where campus minds connect, collaborate, and conquer. Post problems. Get solutions. Build your community.
+                </p>
+                <div class="footer-made-with">
+                    Built with <span>♥</span> for students everywhere &nbsp;·&nbsp; Think. Solve. Connect.
+                </div>
+            </div>
+
+            <!-- Platform -->
+            <div>
+                <div class="footer-col-title">Platform</div>
+                <div class="footer-col-links">
+                    <a href="/problems"><i class="fas fa-layer-group"></i> Browse Problems</a>
+                    <a href="/problems/new"><i class="fas fa-plus"></i> Post a Problem</a>
+                    <a href="/leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a>
+                    <a href="/signup"><i class="fas fa-user-plus"></i> Join Community</a>
+                </div>
+            </div>
+
+            <!-- Departments -->
+            <div>
+                <div class="footer-col-title">Branches</div>
+                <div class="footer-col-links">
+                    <a href="/problems"><i class="fas fa-code"></i> CSE / IT</a>
+                    <a href="/problems"><i class="fas fa-microchip"></i> ECE</a>
+                    <a href="/problems"><i class="fas fa-chart-line"></i> MBA</a>
+                    <a href="/problems"><i class="fas fa-book-open"></i> All Departments</a>
+                </div>
+            </div>
+
+            <!-- Creator info -->
+            <div>
+                <div class="footer-col-title">Built By</div>
+                <div class="footer-creator-card">
+                    <div class="creator-avatar">P</div>
+                    <div class="creator-name">Prince Yadav</div>
+                    <div class="creator-role">Full Stack MERN Developer · B.Tech CSE (2027)</div>
+                    <div class="creator-links">
+                        <a href="https://www.linkedin.com/in/prince-yadav-331bb5298" target="_blank" class="creator-link">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <a href="https://github.com/PrinceYadav001" target="_blank" class="creator-link">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; <%= new Date().getFullYear() %> Campus Connect — Designed & Built by Prince Yadav</span>
+            <div class="footer-bottom-links">
+                <a href="/problems">Problems</a>
+                <a href="/leaderboard">Leaderboard</a>
+                <a href="/signup">Register</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </div>
+</footer>
