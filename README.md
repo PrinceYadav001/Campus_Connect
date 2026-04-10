@@ -1,4 +1,5 @@
 # 🚀 Campus Connect
+<img width="1919" height="971" alt="image" src="https://github.com/user-attachments/assets/7f2fff42-04f3-4ff6-880e-5a52d87054e1" />
 
 > Where campus minds connect, collaborate, and conquer.
 
