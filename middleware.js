@@ -7,8 +7,17 @@ const ExpressError = require('./utils/ExpressError.js');
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.redirectUrl = req.originalUrl;
-        req.flash("error", "You must be logged in to create a problem!");
+        req.flash("error", "Please sign in to continue.");
         return res.redirect("/login");
+    }
+    next();
+};
+
+// Prevents logged-in users from accessing login/signup pages
+module.exports.redirectIfLoggedIn = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        req.flash("error", "You are already logged in.");
+        return res.redirect("/problems");
     }
     next();
 };

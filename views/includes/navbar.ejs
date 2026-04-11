@@ -1,43 +1,60 @@
 <%# ── Campus Connect Navbar ──────────────────────── %>
 <style>
+    /* ── Navbar base ──────────────────────────────────── */
     .cc-nav {
         position: sticky;
         top: 0;
         z-index: 1000;
-        background: rgba(5, 8, 22, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+        background: rgba(6, 9, 16, 0.82);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
         width: 100%;
+        transition: background 0.3s, border-color 0.3s;
+    }
+
+    .cc-nav.scrolled {
+        background: rgba(6, 9, 16, 0.95);
+        border-bottom-color: rgba(124, 58, 237, 0.12);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(124,58,237,0.08);
     }
 
     .cc-nav-inner {
         display: flex;
         align-items: center;
-        height: 60px;
+        height: 58px;
         gap: 0;
     }
 
-    /* Logo */
+    /* ── Logo ─────────────────────────────────────────── */
     .cc-logo {
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.6rem;
         text-decoration: none;
         flex-shrink: 0;
-        padding-right: 1.25rem;
+        padding-right: 1.5rem;
+        transition: opacity 0.18s;
     }
 
+    .cc-logo:hover { opacity: 0.85; }
+
     .cc-logo-mark {
-        width: 36px;
-        height: 36px;
-        background: linear-gradient(135deg, #7c3aed, #06b6d4);
-        border-radius: 10px;
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(140deg, #7c3aed 0%, #06b6d4 100%);
+        border-radius: 9px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 0 16px rgba(124,58,237,0.4);
+        box-shadow: 0 0 0 1px rgba(124,58,237,0.4), 0 4px 14px rgba(124,58,237,0.3);
+        transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .cc-logo:hover .cc-logo-mark {
+        box-shadow: 0 0 0 1px rgba(124,58,237,0.6), 0 4px 20px rgba(124,58,237,0.45);
+        transform: rotate(-3deg) scale(1.05);
     }
 
     .cc-logo-text {
@@ -48,39 +65,41 @@
 
     .cc-logo-name {
         font-family: 'Outfit', sans-serif;
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 800;
-        color: #e6edf3;
-        letter-spacing: -0.3px;
+        color: #eaf0f8;
+        letter-spacing: -0.4px;
     }
 
     .cc-logo-name span {
-        background: linear-gradient(135deg, #a78bfa, #67e8f9);
+        background: linear-gradient(135deg, #a78bfa 30%, #67e8f9 100%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .cc-logo-sub {
-        font-size: 0.6rem;
-        color: #484f58;
-        letter-spacing: 0.3px;
+        font-size: 0.58rem;
+        color: #3d4f63;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+        text-transform: uppercase;
     }
 
-    /* Separator */
+    /* ── Separator ────────────────────────────────────── */
     .cc-sep {
         width: 1px;
-        height: 22px;
-        background: rgba(124,58,237,0.2);
+        height: 20px;
+        background: rgba(124,58,237,0.15);
         flex-shrink: 0;
-        margin-right: 1rem;
+        margin-right: 1.25rem;
     }
 
-    /* Nav links */
+    /* ── Nav links ────────────────────────────────────── */
     .cc-links {
         display: flex;
         align-items: center;
-        gap: 2px;
+        gap: 1px;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -90,60 +109,87 @@
         display: flex;
         align-items: center;
         gap: 0.3rem;
-        padding: 0.38rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.875rem;
+        padding: 0.36rem 0.72rem;
+        border-radius: 7px;
+        font-size: 0.845rem;
         font-weight: 500;
-        color: #8b949e;
+        color: #7d8fa3;
         text-decoration: none;
         white-space: nowrap;
-        transition: all 0.18s;
+        transition: color 0.18s, background 0.18s;
         cursor: pointer;
         border: none;
         background: transparent;
         font-family: inherit;
+        letter-spacing: -0.01em;
+        position: relative;
     }
 
-    .cc-link:hover,
+    .cc-link i {
+        font-size: 0.7rem;
+        opacity: 0.7;
+    }
+
+    .cc-link:hover {
+        color: #c4b5fd;
+        background: rgba(124,58,237,0.08);
+    }
+
     .cc-link.active {
-        background: rgba(124,58,237,0.1);
         color: #a78bfa;
+        background: rgba(124,58,237,0.1);
     }
 
-    .cc-link i { font-size: 0.75rem; }
+    .cc-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 16px;
+        height: 2px;
+        background: linear-gradient(90deg, #7c3aed, #06b6d4);
+        border-radius: 2px;
+    }
 
-    /* CTA button */
+    /* ── CTA button ───────────────────────────────────── */
     .cc-cta {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.38rem 0.9rem;
-        border-radius: 8px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        background: var(--primary, #7c3aed);
+        gap: 0.3rem;
+        padding: 0.36rem 0.85rem;
+        border-radius: 7px;
+        font-size: 0.845rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary, #7c3aed), #5b21b6);
         color: #fff !important;
         text-decoration: none;
         white-space: nowrap;
-        transition: all 0.18s;
-        border: none;
+        transition: all 0.22s;
+        border: 1px solid rgba(124,58,237,0.4);
         cursor: pointer;
-        box-shadow: 0 0 16px rgba(124,58,237,0.35);
+        box-shadow: 0 2px 8px rgba(124,58,237,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+        letter-spacing: -0.01em;
     }
 
+    .cc-cta i { font-size: 0.72rem; }
+
     .cc-cta:hover {
-        background: #5b21b6;
+        background: linear-gradient(135deg, #6d28d9, #4c1d95);
         color: #fff !important;
-        box-shadow: 0 0 24px rgba(124,58,237,0.55);
+        box-shadow: 0 4px 18px rgba(124,58,237,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
         transform: translateY(-1px);
     }
 
-    .cc-cta i { font-size: 0.75rem; }
+    .cc-cta:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba(124,58,237,0.3);
+    }
 
-    /* Spacer */
+    /* ── Spacer ───────────────────────────────────────── */
     .cc-spacer { flex: 1; }
 
-    /* Right side */
+    /* ── Right side ───────────────────────────────────── */
     .cc-right {
         display: flex;
         align-items: center;
@@ -151,94 +197,129 @@
         flex-shrink: 0;
     }
 
-    /* User chip */
+    /* ── Auth links (logged out) ──────────────────────── */
+    .cc-login-link {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.36rem 0.72rem;
+        border-radius: 7px;
+        font-size: 0.845rem;
+        font-weight: 500;
+        color: #7d8fa3;
+        text-decoration: none;
+        transition: color 0.18s, background 0.18s;
+        letter-spacing: -0.01em;
+    }
+
+    .cc-login-link:hover {
+        color: #eaf0f8;
+        background: rgba(255,255,255,0.04);
+    }
+
+    /* ── User chip (logged in) ────────────────────────── */
     .cc-user-chip {
         display: flex;
         align-items: center;
-        gap: 0.45rem;
-        padding: 0.22rem 0.7rem 0.22rem 0.22rem;
-        border: 1px solid rgba(124,58,237,0.2);
-        border-radius: 8px;
-        background: rgba(124,58,237,0.06);
+        gap: 0.5rem;
+        padding: 0.2rem 0.65rem 0.2rem 0.22rem;
+        border: 1px solid rgba(124,58,237,0.18);
+        border-radius: 9px;
+        background: rgba(124,58,237,0.05);
         text-decoration: none;
-        transition: all 0.18s;
+        transition: all 0.2s;
+        cursor: pointer;
     }
 
     .cc-user-chip:hover {
-        border-color: rgba(124,58,237,0.4);
+        border-color: rgba(124,58,237,0.38);
         background: rgba(124,58,237,0.1);
     }
 
     .cc-avatar {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border-radius: 6px;
         background: linear-gradient(135deg, #7c3aed, #06b6d4);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         font-weight: 800;
         color: #fff;
         flex-shrink: 0;
+        letter-spacing: -0.5px;
     }
 
     .cc-uname {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-weight: 600;
-        color: #e6edf3;
-        line-height: 1;
+        color: #eaf0f8;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
     }
 
     .cc-ubranch {
-        font-size: 0.62rem;
-        color: #484f58;
+        font-size: 0.6rem;
+        color: #3d4f63;
         line-height: 1;
+        font-weight: 500;
     }
 
+    /* ── Logout btn ───────────────────────────────────── */
     .cc-logout {
         display: flex;
         align-items: center;
         gap: 0.3rem;
-        padding: 0.35rem 0.7rem;
-        border-radius: 8px;
-        font-size: 0.825rem;
+        padding: 0.32rem 0.65rem;
+        border-radius: 7px;
+        font-size: 0.8rem;
         font-weight: 500;
-        color: #8b949e;
+        color: #7d8fa3;
         text-decoration: none;
         border: 1px solid transparent;
         transition: all 0.18s;
         white-space: nowrap;
+        letter-spacing: -0.01em;
     }
 
     .cc-logout:hover {
-        color: #ef4444;
-        background: rgba(239,68,68,0.08);
-        border-color: rgba(239,68,68,0.2);
+        color: #f43f5e;
+        background: rgba(244,63,94,0.07);
+        border-color: rgba(244,63,94,0.18);
     }
 
-    /* Hamburger */
+    .cc-logout i { font-size: 0.75rem; }
+
+    /* ── Hamburger ────────────────────────────────────── */
     .cc-hamburger {
         display: none;
         flex-direction: column;
         gap: 4px;
         cursor: pointer;
         padding: 7px 8px;
-        border: 1px solid rgba(124,58,237,0.2);
-        border-radius: 8px;
+        border: 1px solid rgba(124,58,237,0.18);
+        border-radius: 7px;
         background: transparent;
         flex-shrink: 0;
+        transition: border-color 0.18s, background 0.18s;
+    }
+
+    .cc-hamburger:hover {
+        border-color: rgba(124,58,237,0.35);
+        background: rgba(124,58,237,0.07);
     }
 
     .cc-hamburger span {
         width: 16px;
-        height: 2px;
-        background: #8b949e;
+        height: 1.5px;
+        background: #7d8fa3;
         border-radius: 2px;
         display: block;
+        transition: all 0.22s;
     }
 
-    /* Mobile */
+    /* ── Mobile nav ───────────────────────────────────── */
     @media (max-width: 768px) {
         .cc-hamburger { display: flex; }
         .cc-sep { display: none; }
@@ -246,25 +327,37 @@
         .cc-desktop {
             display: none;
             position: absolute;
-            top: 61px;
+            top: 59px;
             left: 0;
             right: 0;
-            background: rgba(5,8,22,0.97);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(124,58,237,0.2);
-            padding: 0.75rem 1rem;
+            background: rgba(6, 9, 16, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(124,58,237,0.12);
+            padding: 0.65rem 1rem 1rem;
             flex-direction: column;
             align-items: flex-start;
-            gap: 0.25rem;
+            gap: 0.2rem;
             z-index: 999;
         }
 
-        .cc-desktop.open { display: flex; }
-        .cc-links { flex-direction: column; align-items: flex-start; width: 100%; }
+        .cc-desktop.open {
+            display: flex;
+            animation: menuSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes menuSlide {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .cc-links { flex-direction: column; align-items: flex-start; width: 100%; gap: 0; }
         .cc-link, .cc-cta { width: 100%; }
-        .cc-right { flex-direction: column; align-items: flex-start; width: 100%; gap: 0.25rem; }
+        .cc-link.active::after { display: none; }
+        .cc-right { flex-direction: column; align-items: flex-start; width: 100%; gap: 0.3rem; padding-top: 0.5rem; border-top: 1px solid rgba(124,58,237,0.1); margin-top: 0.25rem; }
         .cc-user-chip { width: 100%; }
         .cc-logout { width: 100%; }
+        .cc-login-link { width: 100%; }
         .cc-spacer { display: none; }
     }
 
@@ -278,33 +371,33 @@
     }
 </style>
 
-<nav class="cc-nav" role="navigation" aria-label="Main navigation">
+<nav class="cc-nav" id="cc-nav" role="navigation" aria-label="Main navigation">
     <div class="container">
         <div class="cc-nav-inner">
 
             <!-- Logo -->
             <a class="cc-logo" href="/" aria-label="Campus Connect Home">
                 <div class="cc-logo-mark">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z" fill="white" opacity="0.9"/>
-                        <path d="M2 17l10 5 10-5" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
-                        <path d="M2 12l10 5 10-5" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" fill="white" opacity="0.95"/>
+                        <path d="M2 17l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.65"/>
+                        <path d="M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
                     </svg>
                 </div>
                 <div class="cc-logo-text">
                     <span class="cc-logo-name">Campus<span>Connect</span></span>
-                    <span class="cc-logo-sub">Student Problem Network</span>
+                    <span class="cc-logo-sub">Student Network</span>
                 </div>
             </a>
 
             <div class="cc-sep" aria-hidden="true"></div>
 
             <!-- Mobile hamburger -->
-            <button class="cc-hamburger" id="cc-nav-toggle" aria-label="Menu" aria-expanded="false">
+            <button class="cc-hamburger" id="cc-nav-toggle" aria-label="Open menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
 
-            <!-- Desktop / collapsible -->
+            <!-- Desktop / collapsible menu -->
             <div class="cc-desktop" id="cc-nav-desktop">
 
                 <ul class="cc-links">
@@ -318,19 +411,21 @@
                             <i class="fas fa-trophy"></i> Leaderboard
                         </a>
                     </li>
+                    <% if (currUser) { %>
                     <li>
                         <a class="cc-cta" href="/problems/new">
                             <i class="fas fa-plus"></i> Post Problem
                         </a>
                     </li>
+                    <% } %>
                 </ul>
 
                 <div class="cc-spacer"></div>
 
                 <div class="cc-right">
                     <% if (!currUser) { %>
-                        <a class="cc-link" href="/login">Log in</a>
-                        <a class="cc-cta" href="/signup">Sign up free</a>
+                        <a class="cc-login-link" href="/login">Sign in</a>
+                        <a class="cc-cta" href="/signup"><i class="fas fa-user-plus"></i> Sign up free</a>
                     <% } else { %>
                         <a class="cc-user-chip" href="/users/<%= currUser.username %>">
                             <div class="cc-avatar"><%= currUser.username.charAt(0).toUpperCase() %></div>
@@ -340,7 +435,7 @@
                             </div>
                         </a>
                         <a class="cc-logout" href="/logout">
-                            <i class="fas fa-sign-out-alt"></i> Log out
+                            <i class="fas fa-arrow-right-from-bracket"></i> Log out
                         </a>
                     <% } %>
                 </div>
@@ -351,6 +446,7 @@
 </nav>
 
 <script>
+    // Mobile menu toggle
     (function() {
         const toggle = document.getElementById('cc-nav-toggle');
         const desktop = document.getElementById('cc-nav-desktop');
@@ -358,17 +454,35 @@
         toggle.addEventListener('click', function() {
             const open = desktop.classList.toggle('open');
             this.setAttribute('aria-expanded', open);
+            this.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#cc-nav') && desktop.classList.contains('open')) {
+                desktop.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
         });
     })();
 
+    // Active link highlighting
     (function() {
         const path = window.location.pathname;
-        const links = {
-            'nav-problems':    path.startsWith('/problems'),
+        const rules = {
+            'nav-problems':    path === '/problems' || (path.startsWith('/problems') && !path.startsWith('/problems/new')),
             'nav-leaderboard': path.startsWith('/leaderboard'),
         };
-        for (const [id, active] of Object.entries(links)) {
+        for (const [id, active] of Object.entries(rules)) {
             if (active) document.getElementById(id)?.classList.add('active');
         }
+    })();
+
+    // Scroll-aware navbar styling
+    (function() {
+        const nav = document.getElementById('cc-nav');
+        if (!nav) return;
+        const update = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+        update();
+        window.addEventListener('scroll', update, { passive: true });
     })();
 </script>

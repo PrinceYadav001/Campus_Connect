@@ -68,12 +68,12 @@
 
     .hero-h1 {
         font-family: 'Outfit', sans-serif;
-        font-size: clamp(2.8rem, 6vw, 5rem);
+        font-size: clamp(2.6rem, 5.5vw, 4.6rem);
         font-weight: 900;
         line-height: 1.05;
-        letter-spacing: -2px;
+        letter-spacing: -2.5px;
         color: var(--text);
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.4rem;
     }
 
     .hero-h1 .grad {
@@ -357,7 +357,13 @@
     <div class="hero-glow-2"></div>
     <div class="container">
         <div class="hero-content">
-            <div class="hero-badge">Campus Connect · Student Network</div>
+        <div class="hero-badge">
+            <% if (currUser) { %>
+                ✦ Welcome back, <%= currUser.username %>
+            <% } else { %>
+                ✦ Campus Connect &middot; Student Network
+            <% } %>
+        </div>
             <h1 class="hero-h1">
                 Connect. Learn.<br>
                 <span class="grad">Solve Together.</span>
@@ -366,12 +372,21 @@
                 The peer-to-peer platform where campus students post academic problems, share solutions, earn recognition, and build a smarter community.
             </p>
             <div class="hero-actions">
+                <% if (!currUser) { %>
                 <a href="/signup" class="btn btn-primary btn-xl">
                     <i class="fas fa-rocket"></i> Join Campus Connect
                 </a>
                 <a href="/problems" class="btn btn-outline-primary btn-xl">
                     <i class="fas fa-layer-group"></i> Browse Problems
                 </a>
+                <% } else { %>
+                <a href="/problems/new" class="btn btn-primary btn-xl">
+                    <i class="fas fa-plus"></i> Post a Problem
+                </a>
+                <a href="/problems" class="btn btn-outline-primary btn-xl">
+                    <i class="fas fa-layer-group"></i> Browse Problems
+                </a>
+                <% } %>
             </div>
             <div class="hero-stats">
                 <div class="stat-item">
@@ -474,12 +489,21 @@
             <h2 class="cta-h2">Ready to Connect?</h2>
             <p class="cta-sub">Join hundreds of students already solving problems together on Campus Connect.</p>
             <div class="cta-actions">
+                <% if (!currUser) { %>
                 <a href="/signup" class="btn btn-primary btn-xl">
                     <i class="fas fa-user-plus"></i> Create Free Account
                 </a>
                 <a href="/problems" class="btn btn-secondary btn-lg">
                     <i class="fas fa-eye"></i> Browse Problems First
                 </a>
+                <% } else { %>
+                <a href="/problems/new" class="btn btn-primary btn-xl">
+                    <i class="fas fa-plus"></i> Post a Problem
+                </a>
+                <a href="/leaderboard" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-trophy"></i> View Leaderboard
+                </a>
+                <% } %>
             </div>
         </div>
     </div>

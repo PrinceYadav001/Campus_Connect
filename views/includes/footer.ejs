@@ -220,7 +220,11 @@
                     <a href="/problems"><i class="fas fa-layer-group"></i> Browse Problems</a>
                     <a href="/problems/new"><i class="fas fa-plus"></i> Post a Problem</a>
                     <a href="/leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a>
+                    <% if (!currUser) { %>
                     <a href="/signup"><i class="fas fa-user-plus"></i> Join Community</a>
+                    <% } else { %>
+                    <a href="/users/<%= currUser.username %>"><i class="fas fa-user"></i> My Profile</a>
+                    <% } %>
                 </div>
             </div>
 
@@ -257,12 +261,17 @@
 
         <!-- Bottom bar -->
         <div class="footer-bottom">
-            <span class="footer-copy">&copy; <%= new Date().getFullYear() %> Campus Connect — Designed & Built by Prince Yadav</span>
+            <span class="footer-copy">&copy; <%= new Date().getFullYear() %> Campus Connect — Designed &amp; Built by Prince Yadav</span>
             <div class="footer-bottom-links">
                 <a href="/problems">Problems</a>
                 <a href="/leaderboard">Leaderboard</a>
+                <% if (!currUser) { %>
                 <a href="/signup">Register</a>
                 <a href="/login">Login</a>
+                <% } else { %>
+                <a href="/users/<%= currUser.username %>">My Profile</a>
+                <a href="/logout">Log out</a>
+                <% } %>
             </div>
         </div>
     </div>
