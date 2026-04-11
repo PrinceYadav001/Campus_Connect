@@ -17,6 +17,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+const PORT = process.env.PORT || 3000;
 const userRouter = require("./routes/user.js");
 const problemsRouter = require("./routes/problems");
 const solutionsRouter = require("./routes/solutions");
@@ -105,6 +106,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("problems/error.ejs", { err });
 });
 
-app.listen(3000, () => {
-    console.log("🚀 Campus Connect running at http://localhost:3000");
+
+
+app.listen(PORT, () => {
+    console.log(`🚀 Campus Connect running on port ${PORT}`);
 });
