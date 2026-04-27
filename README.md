@@ -1,10 +1,16 @@
 # 🚀 Campus Connect
 <img width="1919" height="971" alt="image" src="https://github.com/user-attachments/assets/7f2fff42-04f3-4ff6-880e-5a52d87054e1" />
+
 ## 🌐 Live Demo  
+
+<p align="center">
+  <a href="https://campus-connect-jp4w.onrender.com/" target="_blank">
+    <img src="https://img.shields.io/badge/Visit-Live%20Site-blue?style=for-the-badge&logo=google-chrome" />
+  </a>
+</p>
 
 🚀 Try the platform here:  
 👉 https://campus-connect-jp4w.onrender.com/
-
 
 > Where campus minds connect, collaborate, and conquer.
 
