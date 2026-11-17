@@ -118,15 +118,10 @@ Follow these steps to explore the platform's core functionality:
 
 - Real-time chat functionality.
 - Notification system.
-- AI-powered problem suggestions.
-- Dark and light theme toggle.
 
 ## Builder
 
 **Prince Yadav**
-
-- **Role:** MERN Stack Developer
-- **Education:** B.Tech in Computer Science and Engineering (2027)
 
 ## GitHub Repository
 
