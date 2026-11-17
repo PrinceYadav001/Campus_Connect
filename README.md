@@ -121,7 +121,7 @@ Follow these steps to explore the platform's core functionality:
 - AI-powered problem suggestions.
 - Dark and light theme toggle.
 
-## Author
+## Builder
 
 **Prince Yadav**
 
